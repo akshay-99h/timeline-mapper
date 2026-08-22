@@ -160,6 +160,12 @@ const en: Dict = {
   healthBestDay: "Best day",
   healthMonthly: "Steps by month",
   healthWorkoutTypes: "Workouts by type",
+  healthAllTime: "All time",
+  healthFrom: "From",
+  healthTo: "To",
+  healthPickRange: "Custom range",
+  healthClickHint: "Click a bar for daily detail",
+  healthDaily: "Daily steps",
   navHealth: "Health",
 };
 
@@ -312,6 +318,12 @@ const ko: Dict = {
   healthBestDay: "최고 기록일",
   healthMonthly: "월별 걸음 수",
   healthWorkoutTypes: "운동 종류별",
+  healthAllTime: "전체 기간",
+  healthFrom: "시작일",
+  healthTo: "종료일",
+  healthPickRange: "기간 직접 선택",
+  healthClickHint: "막대를 클릭하면 일별 상세를 볼 수 있어요",
+  healthDaily: "일별 걸음 수",
   navHealth: "건강",
 };
 
@@ -464,6 +476,12 @@ const ja: Dict = {
   healthBestDay: "ベスト日",
   healthMonthly: "月別歩数",
   healthWorkoutTypes: "種類別ワークアウト",
+  healthAllTime: "全期間",
+  healthFrom: "開始日",
+  healthTo: "終了日",
+  healthPickRange: "期間を指定",
+  healthClickHint: "バーをクリックすると日別詳細を表示",
+  healthDaily: "日別歩数",
   navHealth: "ヘルス",
 };
 
@@ -616,6 +634,12 @@ const es: Dict = {
   healthBestDay: "Mejor día",
   healthMonthly: "Pasos por mes",
   healthWorkoutTypes: "Entrenamientos por tipo",
+  healthAllTime: "Todo",
+  healthFrom: "Desde",
+  healthTo: "Hasta",
+  healthPickRange: "Rango personalizado",
+  healthClickHint: "Haz clic en una barra para el detalle diario",
+  healthDaily: "Pasos diarios",
   navHealth: "Salud",
 };
 

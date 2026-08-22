@@ -1,9 +1,10 @@
 // Public health-analysis API: takes the export.xml (or export.zip / a file
 // list from a folder pick) and returns an aggregated HealthSummary.
 
-import type { HealthProgress, HealthSummary } from "./types";
+import type { HealthData, HealthProgress, HealthSummary } from "./types";
 
-export type { HealthSummary, HealthProgress };
+export { summarize, yearsIn } from "./summarize";
+export type { HealthData, HealthSummary, HealthProgress };
 
 /** Picks the analyzable file out of whatever was dropped/selected. */
 export function findHealthFile(files: File[]): File | null {
@@ -18,7 +19,7 @@ export function findHealthFile(files: File[]): File | null {
 export function analyzeHealthFile(
   file: File,
   onProgress: (p: HealthProgress) => void
-): Promise<HealthSummary> {
+): Promise<HealthData> {
   return new Promise((resolve, reject) => {
     let worker: Worker;
     try {
@@ -28,14 +29,14 @@ export function analyzeHealthFile(
       return;
     }
     worker.onmessage = (
-      e: MessageEvent<{ ok?: boolean; summary?: HealthSummary; error?: string; progress?: number }>
+      e: MessageEvent<{ ok?: boolean; data?: HealthData; error?: string; progress?: number }>
     ) => {
       if (typeof e.data.progress === "number") {
         onProgress({ fraction: e.data.progress });
         return;
       }
       worker.terminate();
-      if (e.data.ok && e.data.summary) resolve(e.data.summary);
+      if (e.data.ok && e.data.data) resolve(e.data.data);
       else reject(new Error(e.data.error ?? "HEALTH_PARSE_FAILED"));
     };
     worker.onerror = () => {

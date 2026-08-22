@@ -49,3 +49,33 @@ export interface HealthProgress {
   /** 0..1 of bytes scanned */
   fraction: number;
 }
+
+/** One day of already source-deduped metrics. */
+export interface DayStat {
+  /** "2025-03-01" */
+  date: string;
+  steps: number;
+  distKm: number;
+  kcal: number;
+  exerciseMin: number;
+  flights: number;
+  rhr: number | null;
+  hrSum: number;
+  hrCount: number;
+}
+
+export interface WorkoutItem {
+  /** "2025-03-01" */
+  day: string;
+  type: string;
+  minutes: number;
+  km: number;
+  kcal: number;
+}
+
+/** Raw per-day dataset the scanner produces; summarize() turns a (possibly
+ *  date-filtered) slice of it into a HealthSummary. */
+export interface HealthData {
+  days: DayStat[];
+  workouts: WorkoutItem[];
+}

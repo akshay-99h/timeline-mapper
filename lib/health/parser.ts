@@ -16,7 +16,7 @@
 // Document order nests WorkoutStatistics inside their Workout, so a single
 // pass with "most recent workout" association is exact.
 
-import type { HealthSummary, MonthStat, WorkoutTypeStat } from "./types";
+import type { DayStat, HealthData, WorkoutItem } from "./types";
 
 const TAG_RE = /<(Record|Workout|WorkoutStatistics)\b([^>]*)>/g;
 
@@ -51,25 +51,11 @@ interface DayAgg {
   hrCount: number;
 }
 
-interface CurrentWorkout {
-  type: string;
-  minutes: number;
-  km: number;
-  kcal: number;
-  day: string;
-}
-
 export class HealthScanner {
   private days = new Map<string, DayAgg>();
-  private workoutTypes = new Map<string, WorkoutTypeStat>();
-  private workoutMinByMonth = new Map<string, number>();
-  private current: CurrentWorkout | null = null;
+  private workoutList: WorkoutItem[] = [];
+  private current: WorkoutItem | null = null;
   private carry = "";
-  private minDay = "9999-99-99";
-  private maxDay = "0000-00-00";
-  private workouts = 0;
-  private workoutMin = 0;
-  private workoutKm = 0;
 
   /** Feed one decoded text chunk. */
   push(text: string) {
@@ -155,7 +141,8 @@ export class HealthScanner {
     const kcal = toKcal(num(attr(attrs, "totalEnergyBurned")) ?? 0, attr(attrs, "totalEnergyBurnedUnit") ?? "kcal");
 
     this.current = { type: cleanType(rawType), minutes, km, kcal, day };
-    this.commitWorkout(this.current);
+    this.workoutList.push(this.current);
+    this.day(day); // ensure the day exists for range/day counting
   }
 
   /** iOS 16+ statistics live in child elements; add onto the last workout. */
@@ -166,35 +153,10 @@ export class HealthScanner {
     if (sum == null) return;
     const unit = attr(attrs, "unit") ?? "";
     if (attrs.includes("DistanceWalkingRunning") || attrs.includes("DistanceCycling") || attrs.includes("DistanceSwimming")) {
-      const add = toKm(sum, unit);
-      w.km += add;
-      const t = this.workoutTypes.get(w.type);
-      if (t) t.km += add;
-      this.workoutKm += add;
+      w.km += toKm(sum, unit);
     } else if (attrs.includes("ActiveEnergyBurned")) {
-      const add = toKcal(sum, unit);
-      w.kcal += add;
-      const t = this.workoutTypes.get(w.type);
-      if (t) t.kcal += add;
+      w.kcal += toKcal(sum, unit);
     }
-  }
-
-  private commitWorkout(w: CurrentWorkout) {
-    this.workouts++;
-    this.workoutMin += w.minutes;
-    this.workoutKm += w.km;
-    this.day(w.day); // ensure the day exists for range/day counting
-    const ym = w.day.slice(0, 7);
-    this.workoutMinByMonth.set(ym, (this.workoutMinByMonth.get(ym) ?? 0) + w.minutes);
-    let t = this.workoutTypes.get(w.type);
-    if (!t) {
-      t = { type: w.type, count: 0, minutes: 0, km: 0, kcal: 0 };
-      this.workoutTypes.set(w.type, t);
-    }
-    t.count++;
-    t.minutes += w.minutes;
-    t.km += w.km;
-    t.kcal += w.kcal;
   }
 
   private day(key: string): DayAgg {
@@ -202,22 +164,14 @@ export class HealthScanner {
     if (!d) {
       d = { perSource: new Map(), rhr: null, hrSum: 0, hrCount: 0 };
       this.days.set(key, d);
-      if (key < this.minDay) this.minDay = key;
-      if (key > this.maxDay) this.maxDay = key;
     }
     return d;
   }
 
-  finish(): HealthSummary | null {
+  /** Collapse per-source day aggregates into the raw per-day dataset. */
+  finish(): HealthData | null {
     if (this.days.size === 0) return null;
-
-    const totals = { steps: 0, distanceKm: 0, activeKcal: 0, exerciseMin: 0, flights: 0, workouts: this.workouts, workoutMin: this.workoutMin, workoutKm: this.workoutKm };
-    const monthly = new Map<string, MonthStat>();
-    let bestDay: { date: string; steps: number } | null = null;
-    const rhrs: number[] = [];
-    let hrSum = 0;
-    let hrCount = 0;
-
+    const days: DayStat[] = [];
     for (const [date, d] of this.days) {
       // dominant-source per metric per day (approximates Health-app dedup)
       let steps = 0, distKm = 0, kcal = 0, exerciseMin = 0, flights = 0;
@@ -228,56 +182,10 @@ export class HealthScanner {
         if (s.exerciseMin > exerciseMin) exerciseMin = s.exerciseMin;
         if (s.flights > flights) flights = s.flights;
       }
-      totals.steps += steps;
-      totals.distanceKm += distKm;
-      totals.activeKcal += kcal;
-      totals.exerciseMin += exerciseMin;
-      totals.flights += flights;
-      if (d.rhr != null) rhrs.push(d.rhr);
-      hrSum += d.hrSum;
-      hrCount += d.hrCount;
-      if (!bestDay || steps > bestDay.steps) bestDay = { date, steps: Math.round(steps) };
-      const ym = date.slice(0, 7);
-      let mo = monthly.get(ym);
-      if (!mo) {
-        mo = { ym, steps: 0, workoutMin: 0, activeKcal: 0 };
-        monthly.set(ym, mo);
-      }
-      mo.steps += steps;
-      mo.activeKcal += kcal;
+      days.push({ date, steps, distKm, kcal, exerciseMin, flights, rhr: d.rhr, hrSum: d.hrSum, hrCount: d.hrCount });
     }
-    for (const [ym, min] of this.workoutMinByMonth) {
-      let mo = monthly.get(ym);
-      if (!mo) {
-        mo = { ym, steps: 0, workoutMin: 0, activeKcal: 0 };
-        monthly.set(ym, mo);
-      }
-      mo.workoutMin += min;
-    }
-
-    const n = this.days.size;
-    return {
-      rangeStart: Date.parse(this.minDay),
-      rangeEnd: Date.parse(this.maxDay),
-      daysWithData: n,
-      totals,
-      daily: {
-        steps: totals.steps / n,
-        distanceKm: totals.distanceKm / n,
-        activeKcal: totals.activeKcal / n,
-      },
-      bestDay: bestDay && bestDay.steps > 0 ? bestDay : null,
-      avgHr: hrCount > 0 ? hrSum / hrCount : null,
-      restingHr: rhrs.length
-        ? {
-            avg: rhrs.reduce((a, b) => a + b, 0) / rhrs.length,
-            min: Math.min(...rhrs),
-            max: Math.max(...rhrs),
-          }
-        : null,
-      monthly: [...monthly.values()].sort((a, b) => a.ym.localeCompare(b.ym)),
-      workoutTypes: [...this.workoutTypes.values()].sort((a, b) => b.count - a.count),
-    };
+    days.sort((a, b) => a.date.localeCompare(b.date));
+    return { days, workouts: this.workoutList };
   }
 }
 

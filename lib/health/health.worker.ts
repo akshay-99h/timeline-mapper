@@ -43,9 +43,9 @@ self.onmessage = async (e: MessageEvent<Msg>) => {
       scanner.push(decoder.decode());
     }
 
-    const summary = scanner.finish();
-    if (!summary) throw new Error("NO_HEALTH_DATA");
-    post({ ok: true, summary });
+    const data = scanner.finish();
+    if (!data) throw new Error("NO_HEALTH_DATA");
+    post({ ok: true, data });
   } catch (err) {
     post({ ok: false, error: err instanceof Error ? err.message : String(err) });
   }
