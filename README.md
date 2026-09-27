@@ -11,6 +11,8 @@ No backend, no uploads: your location history never leaves your device.
 ```bash
 npm install
 npm run dev        # http://localhost:3000
+npm test           # Vitest: timeline / GPX / KML parser suites
+npm run lint
 ```
 
 Production:

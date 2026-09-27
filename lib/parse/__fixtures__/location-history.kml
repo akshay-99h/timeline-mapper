@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Document>
+  <name>Location history from 2019-01-05 to 2019-01-05</name>
+  <Placemark>
+    <name>Location history</name>
+    <gx:Track>
+      <altitudeMode>clampToGround</altitudeMode>
+      <when>2019-01-05T14:00:00Z</when>
+      <gx:coord>-0.1246254 51.5007292 0</gx:coord>
+      <when>2019-01-05T15:05:00.000+01:00</when>
+      <gx:coord>-0.127625 51.503364 0</gx:coord>
+      <when>2019-01-05T14:10:00Z</when>
+      <gx:coord>-0.1419 51.5014 0</gx:coord>
+    </gx:Track>
+  </Placemark>
+</Document>
+</kml>

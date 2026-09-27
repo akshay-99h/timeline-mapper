@@ -1,0 +1,27 @@
+{
+  "semanticSegments": [
+    {
+      "startTime": "2024-05-10T10:00:00.000+02:00",
+      "endTime": "2024-05-10T12:00:00.000+02:00",
+      "timelinePath": [
+        { "point": "48.8583701°, 2.2944813°", "time": "2024-05-10T10:05:00.000+02:00" },
+        { "point": "48.8606111°, 2.337644°", "time": "2024-05-10T10:40:00.000+02:00" }
+      ]
+    },
+    {
+      "startTime": "2024-05-10T12:00:00.000+02:00",
+      "endTime": "2024-05-10T14:00:00.000+02:00",
+      "startTimeTimezoneUtcOffsetMinutes": 120,
+      "visit": {
+        "hierarchyLevel": 0,
+        "probability": 0.87,
+        "topCandidate": {
+          "placeId": "ChIJ-fixture-louvre",
+          "semanticType": "UNKNOWN",
+          "probability": 0.64,
+          "placeLocation": { "latLng": "48.8606111°, 2.337644°" }
+        }
+      }
+    }
+  ]
+}

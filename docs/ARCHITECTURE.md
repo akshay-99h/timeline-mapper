@@ -199,9 +199,15 @@ backgrounded and the browser throttles `requestAnimationFrame`.
 
 ## Testing approach
 
-There is no test framework wired in; validation was done with disposable
-node harnesses compiling the pure modules (`tsc --module commonjs` into a
-scratch dir) and running fixture suites:
+`npm test` runs Vitest (`vitest.config.mts`) over `lib/**/*.test.ts`. The
+committed suites cover the Google Timeline parser (all four JSON shapes,
+waypoint spreading, raw-records opt-in and accuracy cutoff, dedup and spike
+rejection) and the GPX/KML track parsers plus multi-source ingestion, using
+small fixtures in `lib/parse/__fixtures__/`.
+
+Before that, validation was done with disposable node harnesses compiling the
+pure modules (`tsc --module commonjs` into a scratch dir) and running fixture
+suites that were not committed:
 
 - parser: 9 fixtures across all four Google shapes, date-line crossing,
   spike rejection, dedup, raw-records opt-in.
@@ -211,4 +217,5 @@ scratch dir) and running fixture suites:
   summaries.
 
 The modules under `lib/` are worker-safe and DOM-free precisely so they can
-be tested this way; if you add a test runner, point it at `lib/`.
+be tested this way; ZIP ingestion and the health parser are not yet covered
+by the Vitest suites.

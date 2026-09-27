@@ -1,0 +1,37 @@
+{
+  "timelineObjects": [
+    {
+      "placeVisit": {
+        "location": {
+          "latitudeE7": 407127753,
+          "longitudeE7": -740059728,
+          "placeId": "ChIJ-fixture-city-hall",
+          "name": "City Hall"
+        },
+        "duration": {
+          "startTimestamp": "2019-01-05T14:00:00Z",
+          "endTimestamp": "2019-01-05T15:00:00Z"
+        }
+      }
+    },
+    {
+      "activitySegment": {
+        "startLocation": { "latitudeE7": 407127753, "longitudeE7": -740059728 },
+        "endLocation": { "latitudeE7": 407484405, "longitudeE7": -739856644 },
+        "duration": {
+          "startTimestampMs": "1546700400000",
+          "endTimestampMs": "1546702200000"
+        },
+        "distance": 4100,
+        "activityType": "IN_SUBWAY",
+        "confidence": "HIGH",
+        "waypointPath": {
+          "waypoints": [
+            { "latE7": 407250000, "lngE7": -740000000 },
+            { "latE7": 407370000, "lngE7": -739930000 }
+          ]
+        }
+      }
+    }
+  ]
+}

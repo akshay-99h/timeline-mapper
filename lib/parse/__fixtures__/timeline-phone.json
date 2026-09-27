@@ -1,0 +1,34 @@
+[
+  {
+    "startTime": "2024-03-01T08:00:00.000+01:00",
+    "endTime": "2024-03-01T09:00:00.000+01:00",
+    "visit": {
+      "hierarchyLevel": "0",
+      "probability": "0.91",
+      "topCandidate": {
+        "placeID": "ChIJ-fixture-home",
+        "semanticType": "Home",
+        "probability": "0.83",
+        "placeLocation": "geo:52.520008,13.404954"
+      }
+    }
+  },
+  {
+    "startTime": "2024-03-01T09:00:00.000+01:00",
+    "endTime": "2024-03-01T09:30:00.000+01:00",
+    "activity": {
+      "start": "geo:52.520008,13.404954",
+      "end": "geo:52.507629,13.390440",
+      "distanceMeters": "1800.0",
+      "topCandidate": { "type": "walking", "probability": "0.97" }
+    }
+  },
+  {
+    "startTime": "2024-03-01T09:00:00.000+01:00",
+    "endTime": "2024-03-01T11:00:00.000+01:00",
+    "timelinePath": [
+      { "point": "geo:52.515000,13.400000", "durationMinutesOffsetFromStartTime": "10" },
+      { "point": "geo:52.510000,13.395000", "durationMinutesOffsetFromStartTime": "20" }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Apple Health Export" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <time>2023-09-10T06:59:00Z</time>
+  </metadata>
+  <trk>
+    <name>Route 2023-09-10 7:00am</name>
+    <trkseg>
+      <trkpt lon="-122.419416" lat="37.774929">
+        <ele>16.0</ele>
+        <time>2023-09-10T07:00:00Z</time>
+        <extensions><speed>2.8</speed><course>90.0</course><hAcc>3.5</hAcc><vAcc>2.1</vAcc></extensions>
+      </trkpt>
+      <trkpt lat="37.775200" lon="-122.418900">
+        <ele>16.5</ele>
+        <time>2023-09-10T07:00:30Z</time>
+      </trkpt>
+      <trkpt lat="37.775500" lon="-122.418300">
+        <ele>17.0</ele>
+      </trkpt>
+      <trkpt lat="0" lon="0">
+        <time>2023-09-10T07:01:00Z</time>
+      </trkpt>
+      <trkpt lat="37.775900" lon="-122.417700">
+        <time>2023-09-10T07:01:30Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
